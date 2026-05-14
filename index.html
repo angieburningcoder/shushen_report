@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>樹生酒莊 — 田野調查報告</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #f4f0e8;
+  --surface:   #faf8f3;
+  --ink:       #1e1c17;
+  --ink-2:     #4c4840;
+  --ink-3:     #9a9590;
+  --rule:      #dedad2;
+  --rule-lt:   #eae6de;
+  --accent:    #6b5c3e;
+  --sage:      #7a9080;
+  --serif:     'Noto Serif TC', serif;
+  --sans:      'Noto Sans TC', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 15px; }
+body { font-family: var(--sans); background: var(--bg); color: var(--ink); line-height: 1.85; }
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(244,240,232,.94); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+}
+.nav-inner {
+  max-width: 860px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 50px; padding: 0 1.5rem;
+}
+.nav-brand { font-family: var(--serif); font-size: 14px; font-weight: 400; color: var(--ink); text-decoration: none; letter-spacing: .05em; }
+.nav-links { display: flex; gap: 1.8rem; list-style: none; }
+.nav-links a { font-size: 11px; color: var(--ink-3); text-decoration: none; letter-spacing: .08em; transition: color .2s; }
+.nav-links a:hover { color: var(--ink); }
+
+/* HERO */
+.hero {
+  background: var(--surface); border-bottom: 1px solid var(--rule);
+  padding: 5rem 1.5rem 4rem; text-align: center;
+}
+.eyebrow { font-size: 10px; letter-spacing: .18em; color: var(--ink-3); text-transform: uppercase; margin-bottom: 1.4rem; }
+.hero h1 {
+  font-family: var(--serif); font-size: clamp(26px, 5vw, 42px);
+  font-weight: 300; line-height: 1.4; margin-bottom: .8rem;
+}
+.hero-sub { font-size: 13px; color: var(--ink-2); letter-spacing: .03em; margin-bottom: 2.5rem; }
+
+/* KEY NUMBERS */
+.kpi-row {
+  display: flex; justify-content: center; gap: 0; flex-wrap: wrap;
+  border: 1px solid var(--rule); border-radius: 10px; overflow: hidden;
+  max-width: 580px; margin: 0 auto;
+  background: var(--surface);
+}
+.kpi {
+  flex: 1; min-width: 120px;
+  padding: 1.2rem 1rem; text-align: center;
+  border-right: 1px solid var(--rule);
+}
+.kpi:last-child { border-right: none; }
+.kpi-num { font-family: var(--serif); font-size: 28px; font-weight: 300; color: var(--ink); line-height: 1; }
+.kpi-unit { font-size: 11px; color: var(--ink-3); margin-left: 2px; }
+.kpi-label { font-size: 10px; letter-spacing: .06em; color: var(--ink-3); margin-top: 4px; }
+
+/* MAIN */
+.main { max-width: 860px; margin: 0 auto; padding: 4rem 1.5rem 8rem; }
+
+/* SECTION */
+.section { margin-bottom: 5rem; }
+.sec-head {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 2rem; padding-bottom: 1rem;
+  border-bottom: 1px solid var(--rule);
+}
+.sec-num { font-size: 10px; letter-spacing: .12em; color: var(--ink-3); flex-shrink: 0; }
+.sec-title { font-family: var(--serif); font-size: 19px; font-weight: 400; }
+.sec-en { font-size: 10px; letter-spacing: .08em; color: var(--ink-3); margin-left: auto; flex-shrink: 0; }
+
+/* ── PILLAR VISUAL (T overview) ── */
+.pillars {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px; background: var(--rule);
+  border: 1px solid var(--rule); border-radius: 10px; overflow: hidden;
+  margin-bottom: 1rem;
+}
+.pillar {
+  background: var(--surface); padding: 1.4rem 1.2rem;
+  cursor: pointer; transition: background .15s;
+  text-decoration: none; color: inherit;
+}
+.pillar:hover { background: var(--bg); }
+.pillar-num { font-size: 10px; letter-spacing: .1em; color: var(--ink-3); margin-bottom: .5rem; }
+.pillar-title { font-family: var(--serif); font-size: 14px; font-weight: 400; margin-bottom: .3rem; }
+.pillar-sub { font-size: 11px; color: var(--ink-3); line-height: 1.5; }
+.pillar-wide {
+  grid-column: 1 / -1; background: var(--surface);
+  padding: 1.4rem 1.2rem; text-align: center;
+  cursor: pointer; transition: background .15s; text-decoration: none; color: inherit;
+}
+.pillar-wide:hover { background: var(--bg); }
+.pillar-wide .pillar-title { font-size: 15px; }
+
+/* ── INSIGHT CARDS (T1–T5) ── */
+.insight-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--rule); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden;
+}
+.insight-card {
+  background: var(--surface); padding: 1.4rem 1.3rem;
+}
+.insight-card.full { grid-column: 1 / -1; }
+.ins-label { font-size: 10px; letter-spacing: .1em; color: var(--ink-3); margin-bottom: .5rem; }
+.ins-body { font-size: 13px; color: var(--ink-2); line-height: 1.8; }
+.ins-body strong { color: var(--ink); font-weight: 500; }
+
+/* ── STAT HIGHLIGHT ── */
+.stat-row {
+  display: flex; gap: 1px; background: var(--rule);
+  border: 1px solid var(--rule); border-radius: 10px; overflow: hidden;
+  margin: 1.5rem 0;
+}
+.stat { flex: 1; background: var(--surface); padding: 1.2rem 1rem; text-align: center; }
+.stat-n { font-family: var(--serif); font-size: 32px; font-weight: 300; color: var(--ink); line-height: 1; }
+.stat-u { font-size: 12px; color: var(--ink-3); }
+.stat-l { font-size: 11px; color: var(--ink-3); margin-top: 4px; }
+
+/* ── SVG TIMELINE ── */
+.timeline-wrap { overflow-x: auto; }
+.tl-phase { font-size: 10px; letter-spacing: .1em; color: var(--ink-3); text-transform: uppercase; margin: 2rem 0 .8rem; }
+.tl-phase:first-child { margin-top: 0; }
+.t-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 6px; }
+.connector { display: flex; flex-direction: column; align-items: center; padding-top: 14px; flex-shrink: 0; }
+.dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.vline { width: 1px; background: var(--rule); flex: 1; min-height: 12px; }
+.tl-btn {
+  flex: 1; text-align: left; border: 1px solid var(--rule-lt); border-radius: 8px;
+  padding: 10px 13px; cursor: pointer; background: var(--surface);
+  transition: border-color .15s, background .15s; width: 100%;
+}
+.tl-btn:hover { border-color: var(--rule); background: var(--bg); }
+.tl-btn.open { border-color: var(--ink-3); }
+.tl-title { font-size: 13px; font-weight: 500; color: var(--ink); display: flex; justify-content: space-between; align-items: center; }
+.tl-sub { font-size: 11px; color: var(--ink-3); margin-top: 2px; }
+.chev { font-size: 11px; color: var(--ink-3); transition: transform .2s; flex-shrink: 0; margin-left: 8px; }
+.tl-btn.open .chev { transform: rotate(180deg); }
+.tl-detail {
+  font-size: 12px; color: var(--ink-2); line-height: 1.75;
+  margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--rule-lt); display: none;
+}
+.risk-bar {
+  border: 1px dashed var(--rule); border-radius: 8px;
+  padding: 9px 13px; background: var(--bg); margin: 6px 0;
+  font-size: 12px; color: var(--ink-3);
+}
+.risk-bar strong { color: var(--ink-2); font-weight: 500; }
+
+/* ── COMPETITION VISUAL ── */
+.comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; }
+.comp-cell { background: var(--surface); padding: 1.3rem; }
+.comp-cell.accent { background: #f0ece2; }
+.comp-label { font-size: 10px; letter-spacing: .1em; color: var(--ink-3); margin-bottom: .5rem; }
+.comp-body { font-size: 13px; color: var(--ink-2); line-height: 1.75; }
+.comp-body strong { color: var(--ink); font-weight: 500; }
+
+/* ── GENERATION VISUAL ── */
+.gen-flow { display: flex; align-items: center; gap: 0; margin: 1.5rem 0; overflow-x: auto; }
+.gen-node {
+  flex-shrink: 0; text-align: center; padding: .8rem 1rem;
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 8px;
+}
+.gen-node.active { background: #f0ece2; border-color: var(--accent); }
+.gen-label { font-family: var(--serif); font-size: 15px; font-weight: 400; }
+.gen-sub { font-size: 10px; color: var(--ink-3); margin-top: 3px; }
+.gen-arrow { color: var(--rule); font-size: 18px; padding: 0 .5rem; flex-shrink: 0; }
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--rule); padding: 2rem 1.5rem;
+  text-align: center; font-size: 11px; color: var(--ink-3);
+  background: var(--surface); letter-spacing: .04em;
+}
+
+@media (max-width: 600px) {
+  .nav-links { display: none; }
+  .pillars { grid-template-columns: 1fr; }
+  .insight-grid { grid-template-columns: 1fr; }
+  .comp-grid { grid-template-columns: 1fr; }
+  .kpi-row { flex-direction: column; max-width: 260px; }
+  .kpi { border-right: none; border-bottom: 1px solid var(--rule); }
+  .kpi:last-child { border-bottom: none; }
+  .stat-row { flex-direction: column; }
+  .gen-flow { flex-direction: column; }
+  .gen-arrow { transform: rotate(90deg); }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-brand" href="#">樹生酒莊 田野報告</a>
+    <ul class="nav-links">
+      <li><a href="#overview">全覽</a></li>
+      <li><a href="#history">歷史</a></li>
+      <li><a href="#tech">技術</a></li>
+      <li><a href="#biz">商業</a></li>
+      <li><a href="#compete">競爭</a></li>
+      <li><a href="#legacy">傳承</a></li>
+      <li><a href="#timeline">時間軸</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="eyebrow">田野調查報告 · 外埔葡萄酒產業</p>
+  <h1>樹生酒莊<br>從留樹決策到第五代傳承</h1>
+  <p class="hero-sub">韌性、技術創新與家族永續的六十年</p>
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-num">60<span class="kpi-unit">年</span></div>
+      <div class="kpi-label">酒莊歷史</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-num">50<span class="kpi-unit">年</span></div>
+      <div class="kpi-label">老藤樹齡</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-num">6<span class="kpi-unit">年</span></div>
+      <div class="kpi-label">首批熟成期</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-num">5<span class="kpi-unit">代</span></div>
+      <div class="kpi-label">家族傳承</div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- OVERVIEW -->
+  <div class="section" id="overview">
+    <div class="sec-head">
+      <span class="sec-num">概覽</span>
+      <h2 class="sec-title">五大研究主題</h2>
+    </div>
+    <div class="pillars">
+      <a class="pillar" href="#history">
+        <div class="pillar-num">T 1</div>
+        <div class="pillar-title">歷史決策與產業韌性</div>
+        <div class="pillar-sub">1996 年留樹轉折、老藤不可替代性</div>
+      </a>
+      <a class="pillar" href="#tech">
+        <div class="pillar-num">T 2</div>
+        <div class="pillar-title">跨界協作與技術創新</div>
+        <div class="pillar-sub">陳千浩教授合作、熱熟成技術</div>
+      </a>
+      <a class="pillar" href="#biz">
+        <div class="pillar-num">T 3</div>
+        <div class="pillar-title">商業模式與價值轉譯</div>
+        <div class="pillar-sub">得獎帶路、體驗預約、口碑行銷</div>
+      </a>
+      <a class="pillar" href="#compete">
+        <div class="pillar-num">T 4</div>
+        <div class="pillar-title">競爭策略與環境變遷</div>
+        <div class="pillar-sub">在地原料、氣候壓力、產業共生</div>
+      </a>
+      <a class="pillar" href="#legacy">
+        <div class="pillar-num">T 5</div>
+        <div class="pillar-title">法規限制與永續傳承</div>
+        <div class="pillar-sub">合法化成本、第五代接班</div>
+      </a>
+      <a class="pillar" href="#timeline" style="background:#f0ece2;">
+        <div class="pillar-num">↓</div>
+        <div class="pillar-title">互動時間軸</div>
+        <div class="pillar-sub">點擊展開各階段細節</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- T1 -->
+  <div class="section" id="history">
+    <div class="sec-head">
+      <span class="sec-num">T 1</span>
+      <h2 class="sec-title">歷史決策與產業韌性</h2>
+      <span class="sec-en">Topic &amp; Background</span>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-n">1996</div>
+        <div class="stat-u">年</div>
+        <div class="stat-l">政府停止收購契作</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">500</div>
+        <div class="stat-u">元／棵</div>
+        <div class="stat-l">政府砍樹補助</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">54</div>
+        <div class="stat-u">萬／公頃</div>
+        <div class="stat-l">總補助金，約 5 年耗盡</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">12</div>
+        <div class="stat-u">個小孩</div>
+        <div class="stat-l">留樹的生活理由之一</div>
+      </div>
+    </div>
+
+    <div class="insight-grid">
+      <div class="insight-card">
+        <div class="ins-label">留樹的真實動機</div>
+        <div class="ins-body">除了「不捨」，外埔坡地<strong>缺乏灌溉水源</strong>，除葡萄外其他作物難以生存。加上家有 12 個孩子，留著葡萄至少能食用或自釀。</div>
+      </div>
+      <div class="insight-card">
+        <div class="ins-label">財務空窗期</div>
+        <div class="ins-body">補助金約 5 年用盡後陷入困境，甚至「偷拿糖廠甘蔗求生」，最終靠<strong>土地房屋抵押貸款</strong>支撐酒莊轉型。</div>
+      </div>
+      <div class="insight-card full">
+        <div class="ins-label">老藤的不可替代性</div>
+        <div class="ins-body">留存的 50–60 年老藤根系深穩，吸收水分養分不受施肥波動影響。老藤果實雖小，但<strong>香氣與甜度更為凝聚</strong>，是高品質酒款的根本來源，新藤 2–3 年難以複製。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- T2 -->
+  <div class="section" id="tech">
+    <div class="sec-head">
+      <span class="sec-num">T 2</span>
+      <h2 class="sec-title">跨界協作與技術創新</h2>
+      <span class="sec-en">The How</span>
+    </div>
+
+    <div class="insight-grid">
+      <div class="insight-card">
+        <div class="ins-label">合作分工模式</div>
+        <div class="ins-body"><strong>莊主（父親輩）</strong>負責 50 年種植經驗與葡萄園管理；<strong>陳千浩教授</strong>帶入國外釀造技術。雙方明確分工，互不干涉專業範疇。</div>
+      </div>
+      <div class="insight-card">
+        <div class="ins-label">信任的代價</div>
+        <div class="ins-body">首批酒熟成需 6 年，期間零收入。已投入數千萬後<strong>沒有退路</strong>，只能放手讓教授自由發揮。</div>
+      </div>
+      <div class="insight-card">
+        <div class="ins-label">熱熟成技術</div>
+        <div class="ins-body">利用台灣炎熱氣候發展，與國外<strong>地窖冷藏熟成</strong>截然不同，是在地環境限制轉化為優勢的典型案例。</div>
+      </div>
+      <div class="insight-card">
+        <div class="ins-label">海底熟成實驗</div>
+        <div class="ins-body">曾將酒置入<strong>新竹外海海底 7 個月</strong>，利用低溫與海浪波動帶出鹽味與風味變化，屬於主動創新實驗。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- T3 -->
+  <div class="section" id="biz">
+    <div class="sec-head">
+      <span class="sec-num">T 3</span>
+      <h2 class="sec-title">商業模式與價值轉譯</h2>
+      <span class="sec-en">Value Creation</span>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-n">3,600</div>
+        <div class="stat-u">元</div>
+        <div class="stat-l">金牌酒現售價</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">½</div>
+        <div class="stat-u"></div>
+        <div class="stat-l">6 年後剩餘產量（蒸發損失）</div>
+      </div>
+    </div>
+
+    <div class="insight-grid">
+      <div class="insight-card">
+        <div class="ins-label">帶路雞策略</div>
+        <div class="ins-body">金牌得獎酒雖產量少、定價高，但帶動整體客源。以得獎名氣吸引新客，再轉化為<strong>熟客與口碑</strong>。</div>
+      </div>
+      <div class="insight-card">
+        <div class="ins-label">體驗行程</div>
+        <div class="ins-body">接受遊覽車或散客預約，現場解說與<strong>小額試飲</strong>引導購買，非大型觀光模式。</div>
+      </div>
+      <div class="insight-card full">
+        <div class="ins-label">行銷核心</div>
+        <div class="ins-body">政府主辦活動（如紅酒音樂會）有曝光效果，但<strong>主力仍是長期熟客與口碑推薦</strong>，酒莊與政治執政者的關係也間接影響活動參與機會。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- T4 -->
+  <div class="section" id="compete">
+    <div class="sec-head">
+      <span class="sec-num">T 4</span>
+      <h2 class="sec-title">競爭策略與環境變遷</h2>
+      <span class="sec-en">Critical Insight</span>
+    </div>
+
+    <div class="comp-grid">
+      <div class="comp-cell accent">
+        <div class="comp-label">核心競爭力</div>
+        <div class="comp-body"><strong>在地原料 × 不可複製</strong><br>金香與黑后品種的甜度與香氣，加上老藤根基與教授指導的歷史積累，競爭者難以低價仿製。</div>
+      </div>
+      <div class="comp-cell">
+        <div class="comp-label">產業共生態度</div>
+        <div class="comp-body">主動推薦客人參觀其他酒莊，認為各家風味不同，<strong>共同壯大外埔葡萄酒名聲</strong>才是長期策略。</div>
+      </div>
+      <div class="comp-cell" style="grid-column:1/-1;">
+        <div class="comp-label">氣候風險（持續未解）</div>
+        <div class="comp-body">6–7 月暴雨或早颱若迫使提前採收，葡萄甜度不足，釀出品質不佳，直接造成<strong>原料損失與收入減少</strong>。目前技術尚無法完全解決。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- T5 -->
+  <div class="section" id="legacy">
+    <div class="sec-head">
+      <span class="sec-num">T 5</span>
+      <h2 class="sec-title">法規限制與永續傳承</h2>
+      <span class="sec-en">Conclusion &amp; Sustain</span>
+    </div>
+
+    <div class="insight-grid" style="margin-bottom:1.5rem;">
+      <div class="insight-card">
+        <div class="ins-label">法規演變</div>
+        <div class="ins-body">早期非法釀酒面臨查緝風險；合法化後改為面對<strong>農藥殘留、酒精濃度檢驗與稅務</strong>，合法帶來保障也帶來持續成本。</div>
+      </div>
+      <div class="insight-card">
+        <div class="ins-label">第五代回鄉原因</div>
+        <div class="ins-body">工作時間彈性、可自己當老闆，以及<strong>對家族產業的責任感</strong>，3 位年輕人分工內勤與現場。</div>
+      </div>
+      <div class="insight-card full">
+        <div class="ins-label">傳承模式</div>
+        <div class="ins-body">以<strong>種植經驗（家族）× 釀造科學（學術）</strong>的雙軌模式持續運作，不仰賴單一人才，讓產業能在跨代間穩定延續。</div>
+      </div>
+    </div>
+
+    <div class="gen-flow">
+      <div class="gen-node">
+        <div class="gen-label">阿公輩</div>
+        <div class="gen-sub">種植葡萄</div>
+      </div>
+      <div class="gen-arrow">→</div>
+      <div class="gen-node">
+        <div class="gen-label">父親輩</div>
+        <div class="gen-sub">留樹、轉型</div>
+      </div>
+      <div class="gen-arrow">→</div>
+      <div class="gen-node">
+        <div class="gen-label">陳教授</div>
+        <div class="gen-sub">技術導入</div>
+      </div>
+      <div class="gen-arrow">→</div>
+      <div class="gen-node active">
+        <div class="gen-label">第五代</div>
+        <div class="gen-sub">3 位年輕人</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="section" id="timeline">
+    <div class="sec-head">
+      <span class="sec-num">時間軸</span>
+      <h2 class="sec-title">核心發展流程</h2>
+      <span class="sec-en">點擊展開</span>
+    </div>
+
+    <div class="tl-phase">起源期</div>
+
+    <div class="t-row">
+      <div class="connector"><div class="dot" style="background:#7a9080;"></div><div class="vline"></div></div>
+      <button class="tl-btn" onclick="tl(this)">
+        <div class="tl-title">1960s — 外埔葡萄種植 <span class="chev">⌄</span></div>
+        <div class="tl-sub">坡地缺水、耐旱為主</div>
+        <div class="tl-detail">外埔山坡地缺乏灌溉水源，葡萄是少數適合的作物。其餘僅能種甘蔗、地瓜、花生、南瓜，產量效益均不理想。</div>
+      </button>
+    </div>
+
+    <div class="t-row">
+      <div class="connector"><div class="dot" style="background:#7a9080;"></div><div class="vline"></div></div>
+      <button class="tl-btn" onclick="tl(this)">
+        <div class="tl-title">契作時期 — 供應公賣局 <span class="chev">⌄</span></div>
+        <div class="tl-sub">穩定收購、完全依賴政策</div>
+        <div class="tl-detail">長期作為台灣菸酒公賣局釀酒葡萄供應商。收入穩定，但一旦政策轉向便毫無緩衝。</div>
+      </button>
+    </div>
+
+    <div class="tl-phase">轉折期</div>
+
+    <div class="t-row">
+      <div class="connector"><div class="dot" style="background:#b07050;"></div><div class="vline"></div></div>
+      <button class="tl-btn" onclick="tl(this)">
+        <div class="tl-title">1996 — 政府停止收購 <span class="chev">⌄</span></div>
+        <div class="tl-sub">補助砍樹每棵 500 元</div>
+        <div class="tl-detail">政府不再收購釀酒葡萄，以每棵 500 元（每公頃約 54 萬）鼓勵砍樹。補助金看似優厚，約五年即耗盡，農民面臨無收入困境。</div>
+      </button>
+    </div>
+
+    <div class="t-row">
+      <div class="connector"><div class="dot" style="background:#b07050;"></div><div class="vline"></div></div>
+      <button class="tl-btn" onclick="tl(this)">
+        <div class="tl-title">關鍵決策 — 留下葡萄樹 <span class="chev">⌄</span></div>
+        <div class="tl-sub">不捨 × 地況 × 12 個孩子</div>
+        <div class="tl-detail">留樹非出於長遠規劃：一是不捨；二是 12 個孩子（9 男 3 女）可食用；三是坡地條件差，種其他作物無效益。「沒退路」成為最強動力。</div>
+      </button>
+    </div>
+
+    <div class="tl-phase">研發期</div>
+
+    <div class="t-row">
+      <div class="connector"><div class="dot" style="background:#6b6b9a;"></div><div class="vline"></div></div>
+      <button class="tl-btn" onclick="tl(this)">
+        <div class="tl-title">與陳千浩教授展開合作 <span class="chev">⌄</span></div>
+        <div class="tl-sub">種植經驗 × 學術技術</div>
+        <div class="tl-detail">莊主負責葡萄園管理與濕度觀察，教授負責釀造技術與實驗研發。雙方明確分工，互不干涉，讓農民得以提升釀造水準。</div>
+      </button>
+    </div>
+
+    <div class="t-row">
+      <div class="connector"><div class="dot" style="background:#6b6b9a;"></div><div class="vline"></div></div>
+      <button class="tl-btn" onclick="tl(this)">
+        <div class="tl-title">6 年研發期、零收入 <span class="chev">⌄</span></div>
+        <div class="tl-sub">橡木桶、貸款、老婆本</div>
+        <div class="tl-detail">首批酒熟成需 6 年，期間只有投入沒有收入。靠銀行貸款、農會抵押與家人積蓄支撐。已投入數千萬，只能全力信任教授。</div>
+      </button>
+    </div>
+
+    <div class="t-row">
+      <div class="connector"><div class="dot" style="background:#6b6b9a;"></div><div class="vline"></div></div>
+      <button class="tl-btn" onclick="tl(this)">
+        <div class="tl-title">技術在地化 <span class="chev">⌄</span></div>
+        <div class="tl-sub">熱熟成、海底熟成實驗</div>
+        <div class="tl-detail">利用台灣炎熱氣候發展「熱熟成」，與國外地窖冷藏截然不同。另曾將酒置入新竹外海海底 7 個月，帶出鹽味與自然風味變化。</div>
+      </button>
+    </div>
+
+    <div class="tl-phase">成長期</div>
+
+    <div class="t-row">
+      <div class="connector"><div class="dot" style="background:#a08040;"></div><div class="vline"></div></div>
+      <button class="tl-btn" onclick="tl(this)">
+        <div class="tl-title">首度獲得金牌 <span class="chev">⌄</span></div>
+        <div class="tl-sub">品牌聲譽建立</div>
+        <div class="tl-detail">金牌酒定價 3,600 元，因 Angel's Share 蒸發損失 6 年後產量剩一半，但得獎名氣帶動整體客源，成為引流的「帶路雞」。</div>
+      </button>
+    </div>
+
+    <div class="t-row">
+      <div class="connector"><div class="dot" style="background:#a08040;"></div><div class="vline"></div></div>
+      <button class="tl-btn" onclick="tl(this)">
+        <div class="tl-title">商業模式成型 <span class="chev">⌄</span></div>
+        <div class="tl-sub">體驗預約、口碑熟客</div>
+        <div class="tl-detail">接受遊覽車與散客預約，小額試飲引導購買。主力銷售靠長期熟客與口碑推薦，政府活動為輔助曝光管道。</div>
+      </button>
+    </div>
+
+    <div class="risk-bar"><strong>持續風險：</strong>6–7 月暴雨或早颱若迫使提前採收，甜度不足將直接影響品質與收入，現階段技術尚無法完全解決。</div>
+
+    <div class="tl-phase">傳承期</div>
+
+    <div class="t-row">
+      <div class="connector"><div class="dot" style="background:#4a7080;"></div><div class="vline"></div></div>
+      <button class="tl-btn" onclick="tl(this)">
+        <div class="tl-title">第五代回鄉接班 <span class="chev">⌄</span></div>
+        <div class="tl-sub">3 位年輕人、內外分工</div>
+        <div class="tl-detail">3 位第五代年輕人分工內勤與現場。回流動機包括彈性工時、自主創業感，以及家族責任感。</div>
+      </button>
+    </div>
+
+    <div class="t-row">
+      <div class="connector"><div class="dot" style="background:#4a7080;"></div></div>
+      <button class="tl-btn" onclick="tl(this)">
+        <div class="tl-title">產業聚落共生發展 <span class="chev">⌄</span></div>
+        <div class="tl-sub">推薦同業、共做外埔品牌</div>
+        <div class="tl-detail">主動推薦客人參觀其他酒莊，認為各家風味各異，共同壯大外埔葡萄酒的區域品牌效應才是長期正道。</div>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<footer>樹生酒莊田野調查報告　台中市外埔區葡萄酒產業研究</footer>
+
+<script>
+function tl(btn) {
+  const d = btn.querySelector('.tl-detail');
+  const open = btn.classList.contains('open');
+  d.style.display = open ? 'none' : 'block';
+  btn.classList.toggle('open', !open);
+}
+</script>
+</body>
+</html>
